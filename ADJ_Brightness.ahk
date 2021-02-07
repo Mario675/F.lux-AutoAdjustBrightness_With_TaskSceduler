@@ -32,11 +32,13 @@ First_Setup_Check_Notification()
 }
 
 Stage_Tracker_Value := 0
-Delay_length_In_MiliSeconds_Value := null
+global Delay_length_In_MiliSeconds_Value := 0
 Changing_Brightness_Upon_Running_App()
 {
     IniRead, Stage_Tracker_Value, BrightnessLevel.ini, Live_Variables, Stage_Tracker
     IniRead, Delay_length_In_MiliSeconds_Value, BrightnessLevel.ini, config, Delay_length_In_MiliSeconds
+
+    
 
     switch Stage_Tracker_Value
     {
@@ -46,7 +48,7 @@ Changing_Brightness_Upon_Running_App()
             loop 2
             {
                 send !{PgDn}
-                sleep Delay_length_In_MiliSeconds_Value
+                sleep %Delay_length_In_MiliSeconds_Value%
             }
             goto OutOfSwitch
         }
@@ -80,5 +82,6 @@ Changing_Brightness_Upon_Running_App()
 
 
 
-
+!esc::
+exitapp
 return
