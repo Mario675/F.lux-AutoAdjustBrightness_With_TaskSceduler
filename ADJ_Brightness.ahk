@@ -9,7 +9,7 @@ if !FileExist("BrightnessLevel.ini")
 {  
 
     IniWrite, 1, BrightnessLevel.ini, config, FirstSetup
-    IniWrite, 1, BrightnessLevel.ini, config, Delay_length_In_MiliSeconds
+    IniWrite, 1000, BrightnessLevel.ini, config, Delay_length_In_MiliSeconds
     IniWrite, 0, BrightnessLevel.ini, Live_Variables, Stage_Tracker
 
     TrayTip, Added BrightnessLevel.ini Config File!, ADJ_Brightness, 3
