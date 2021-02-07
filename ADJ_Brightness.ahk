@@ -9,8 +9,8 @@ if !FileExist("BrightnessLevel.ini")
 {  
 
     IniWrite, 1, BrightnessLevel.ini, config, FirstSetup
-    IniWrite, 0, BrightnessLevel.ini, config, Delay_length
-
+    IniWrite, 1, BrightnessLevel.ini, config, Delay_length_In_MiliSecondsSeconds
+    IniWrite, 0, BrightnessLevel.ini, Live_Variables, Stage_Tracker
 
     TrayTip, Added BrightnessLevel.ini Config File!, ADJ_Brightness, 3
 }
@@ -31,7 +31,51 @@ First_Setup_Check_Notification()
     return
 }
 
-First_Setup_Check_Notification()
+Stage_Tracker_Value := 0
+Delay_length_In_MiliSeconds_Value := null
+Changing_Brightness_Upon_Running_App()
+{
+    IniRead, Stage_Tracker_Value, BrightnessLevel.ini, Live_Variables, Stage_Tracker
+    IniRead, Delay_length_In_MiliSeconds_Value, BrightnessLevel.ini, config, Delay_length_In_MiliSeconds
+
+    switch Stage_Tracker_Value
+    {
+        Case 0:
+        {
+            Stage_Tracker_Value += 1
+            loop 2
+            {
+                send !{PgDn}
+                sleep Delay_length_In_MiliSeconds_Value
+            }
+            goto OutOfSwitch
+        }
+
+        case 1:
+        {
+
+            goto OutOfSwitch
+        }
+
+        case 2:
+        {
+
+            goto OutOfSwitch
+        }
+
+    }
+    OutOfSwitch:
+
+    TrayTip, %Stage_Tracker_Value%, ADJ_Brightness
+}
+
+
+{ ;Usual Main Running Procedure
+    First_Setup_Check_Notification()
+    Changing_Brightness_Upon_Running_App()
+    return
+}
+
 
 
 
