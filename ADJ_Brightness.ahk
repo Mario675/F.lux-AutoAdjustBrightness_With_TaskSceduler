@@ -43,6 +43,7 @@ Changing_Brightness_Upon_Running_App()
         Case 0:
         {
             Stage_Tracker_Value += 1
+            IniWrite, %Stage_Tracker_Value%, BrightnessLevel.ini, Live_Variables, Stage_Tracker
             loop 2
             {
                 send !{PgDn}
