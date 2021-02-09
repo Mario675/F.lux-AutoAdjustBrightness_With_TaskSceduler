@@ -8,9 +8,14 @@ SetWorkingDir, %A_ScriptDir%
 if !FileExist("BrightnessLevel.ini")
 {  
 
+    ;Config
     IniWrite, 1, BrightnessLevel.ini, config, FirstSetup
     IniWrite, 1000, BrightnessLevel.ini, config, Delay_length_In_MiliSeconds
+    IniWrite, 1, BrightnessLevel.ini, config, Strength_Amount
+
+    ;Live Variables section
     IniWrite, 0, BrightnessLevel.ini, Live_Variables, Stage_Tracker
+
 
     TrayTip, Added BrightnessLevel.ini Config File!, ADJ_Brightness, 3
 }
@@ -31,42 +36,36 @@ First_Setup_Check_Notification()
     return
 }
 
+Strength_Amount_Value := 0
 Stage_Tracker_Value := 0
 Delay_length_In_MiliSeconds_Value := null
 Changing_Brightness_Upon_Running_App()
 {
     IniRead, Stage_Tracker_Value, BrightnessLevel.ini, Live_Variables, Stage_Tracker
     IniRead, Delay_length_In_MiliSeconds_Value, BrightnessLevel.ini, config, Delay_length_In_MiliSeconds
+    IniRead, Strength_Amount_Value, BrightnessLevel.ini, config, Strength_Amount
 
-    switch Stage_Tracker_Value
     {
-        Case 0:
+        Stage_Tracker_Value += 1
+        msgbox % Stage_Tracker_Value
+        Stage_Tracker_Value *= Strength_Amount_Value
+        msgbox % Stage_Tracker_Value
+
+        if Stage_Tracker_Value >= 18
         {
-            Stage_Tracker_Value += 1
-            IniWrite, %Stage_Tracker_Value%, BrightnessLevel.ini, Live_Variables, Stage_Tracker
-            loop 2
-            {
-                send !{PgDn}
-                sleep Delay_length_In_MiliSeconds_Value
-            }
-            goto OutOfSwitch
+            Stage_Tracker_Value = 18
         }
+        
 
-        case 1:
+        IniWrite, %Stage_Tracker_Value%, BrightnessLevel.ini, Live_Variables, Stage_Tracker
+        loop %Stage_Tracker_Value%
         {
-
-            goto OutOfSwitch
-        }
-
-        case 2:
-        {
-
-            goto OutOfSwitch
+            send !{PgDn}
+            sleep Delay_length_In_MiliSeconds_Value
         }
 
     }
-    OutOfSwitch:
-
+    
     TrayTip, %Stage_Tracker_Value%, ADJ_Brightness
 }
 
@@ -74,11 +73,12 @@ Changing_Brightness_Upon_Running_App()
 { ;Usual Main Running Procedure
     First_Setup_Check_Notification()
     Changing_Brightness_Upon_Running_App()
-    return
+    exitapp
 }
 
 
-
+!x::
+ExitApp
 
 
 
