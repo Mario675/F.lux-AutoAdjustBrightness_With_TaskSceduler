@@ -15,7 +15,7 @@ if !FileExist("BrightnessLevel.ini")
 
     ;Live Variables section
     IniWrite, 0, BrightnessLevel.ini, Live_Variables, Stage_Tracker
-
+    IniWrite, 0, BrightnessLevel.ini, Live_Variables, Time_Tracker
 
     TrayTip, Added BrightnessLevel.ini Config File!, ADJ_Brightness, 3
 }
@@ -35,6 +35,25 @@ First_Setup_Check_Notification()
 
     return
 }
+
+
+Time_Tracker_Value := 0
+Time_Now := 0
+Check_If_Next_Day_Had_Passed()
+{
+    IniRead, Time_Tracker_Value, BrightnessLevel.ini, Live_Variables, Time_Tracker
+
+    FormatTime, Time_Now, ,d
+    msgbox % Time_Now "and" Time_Tracker_Value
+
+    if Time_Now not= Time_Tracker_Value
+    {
+        IniWrite, 0, BrightnessLevel.ini, Live_Variables, Stage_Tracker
+        IniWrite, %Time_Now%, BrightnessLevel.ini, Live_Variables, Time_Tracker
+    }
+    return
+}
+
 
 Strength_Amount_Value := 0
 Stage_Tracker_Value := 0
@@ -72,6 +91,7 @@ Changing_Brightness_Upon_Running_App()
 
 { ;Usual Main Running Procedure
     First_Setup_Check_Notification()
+    Check_If_Next_Day_Had_Passed()
     Changing_Brightness_Upon_Running_App()
     exitapp
 }
